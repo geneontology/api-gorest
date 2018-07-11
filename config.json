@@ -1,0 +1,4 @@
+{
+    "rdfStore" :"http://rdf.geneontology.org/blazegraph/sparql",
+    "separator" : "@@" 
+}

@@ -3,41 +3,142 @@ Transform:
 - AWS::Serverless-2016-10-31
 - AWS::CodeStar
 
+Globals:
+  Function:
+    Runtime: nodejs6.10
+    MemorySize: 128
+    Timeout: 15
+  Api:
+    EndpointConfiguration: EDGE
+    Cors:
+#      AllowMethods: "'GET'" # If you omit this property, then SAM will automatically allow all the methods configured for each API.
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+#    StageName: prod
+
+
 Parameters:
   ProjectId:
     Type: String
     Description: AWS CodeStar projectID used to associate new resources to team members
 
-# Enable blue/green deployments using this Globals section. For instructions, see the AWS CodeStar User Guide:
-# https://docs.aws.amazon.com/codestar/latest/userguide/how-to-modify-serverless-project.html?icmpid=docs_acs_rm_tr
-#
-# Globals:
-#   Function:
-#     AutoPublishAlias: live
-#     DeploymentPreference:
-#       Enabled: true
-#       Type: Canary10Percent5Minutes
+
 
 Resources:
-  HelloWorld:
+#  APIGateway:
+#    Type: AWS::Serverless::Api
+#    Properties:
+#      StageName: prod
+#      DefinitionUri: swagger.yml
+
+# COULD USE THIS TO DEFINE THE API GATEWAY IN A SWAGGER FILE
+# https://github.com/awslabs/serverless-application-model/blob/master/examples/2016-10-31/api_swagger_cors/template.yaml
+
+#      DefinitionBody:
+#          'Fn::Transform':
+#            Name: 'AWS::Include'
+            # Replace <bucket> with your bucket name
+#            Parameters:
+#              Location: s3://<bucket>/swagger.yaml      
+
+  LambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
-      Runtime: nodejs4.3
       Environment:
         Variables:
           NODE_ENV: production
       Role:
         Fn::ImportValue:
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+
       Events:
-        GetEvent:
+        # API Gateway event to trigger this lambda function
+        GetRoot:
           Type: Api
           Properties:
             Path: /
             Method: get
-        PostEvent:
+
+        # this will create another event triggering the same lambda function
+        GetModels:
           Type: Api
           Properties:
-            Path: /
-            Method: post
+            Path: /models
+            Method: get
+        # this will create yet another event triggering the same lambda function
+        GetModel:
+          Type: Api
+          Properties:
+            Path: /models/{id}
+            Method: get
+        # this will create yet another event triggering the same lambda function
+        GetLastModels:
+          Type: Api
+          Properties:
+            Path: /models/last/{nb}
+            Method: get
+        GetModelGOs:
+          Type: Api
+          Properties:
+            Path: /models/go
+            Method: get
+        GetModelBPs:
+          Type: Api
+          Properties:
+            Path: /models/bp
+            Method: get
+        GetModelMFs:
+          Type: Api
+          Properties:
+            Path: /models/mf
+            Method: get
+        GetModelCCs:
+          Type: Api
+          Properties:
+            Path: /models/cc
+            Method: get
+        GetModelGPs:
+          Type: Api
+          Properties:
+            Path: /models/gp
+            Method: get
+        GetModelPMIDs:
+          Type: Api
+          Properties:
+            Path: /models/pmid
+            Method: get
+            
+
+        GetGroups:
+          Type: Api
+          Properties:
+            Path: /groups
+            Method: get
+        GetGroup:
+          Type: Api
+          Properties:
+            Path: /groups/{name}
+            Method: get
+        GetGroupDetails:
+          Type: Api
+          Properties:
+            Path: /groups/{name}/details
+            Method: get            
+
+
+        GetUsers:
+          Type: Api
+          Properties:
+            Path: /users
+            Method: get
+        GetUser:
+          Type: Api
+          Properties:
+            Path: /users/{orcid}
+            Method: get
+        GetUserModels:
+          Type: Api
+          Properties:
+            Path: /users/{orcid}/models
+            Method: get

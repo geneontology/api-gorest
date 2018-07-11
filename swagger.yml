@@ -1,0 +1,621 @@
+swagger: "2.0"
+
+info:
+  title: "GOCAM REST"
+  description: "REST API for the Gene Ontology Causal Activity Models (GO-CAMs) site. Find more at [http://geneontology.org/gocam](http://geneontology.org/gocam)."
+  version: "1.0.0"
+  contact:
+    email: "laurent.albou@lbl.gov"
+    
+host: "api.geneontology.cloud"
+basePath: "/gocam"
+
+tags:
+- name: "go"
+  description: "Access GO information"
+- name: "models"
+  description: "Access GO-CAM related information"
+  externalDocs:
+    description: "Find out more"
+    url: "http://geneontology.org/gocam"
+- name: "users"
+  description: "Access GO-CAM Users related information"
+- name: "groups"
+  description: "Access GO-CAM Groups related information"
+- name: "stats"
+  description: "Access GO-CAM Statistics"
+
+schemes:
+- "https"
+- "http"
+
+paths:
+
+  /go/{id}:
+    get:
+      tags:
+      - "go"
+      summary: "Find GO-Term by ID"
+      description: "Returns a single GO-Term"
+      operationId: "getGOTermById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of GO-Term to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOTerm"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-Term not found"
+
+  /go/{id}/hierarchy:
+    get:
+      tags:
+      - "go"
+      summary: "Find GO-Term Hierarchy by ID"
+      description: "Returns the children and parents of a single GO-Term"
+      operationId: "getGOTermHierarchyById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of GO-Term to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOTermRelation"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-Term not found"
+
+  /go/{id}/relation:
+    get:
+      tags:
+      - "go"
+      summary: "Find GO-Term Relations by ID"
+      description: "Returns the GO-Terms related to a single GO-Term"
+      operationId: "getGOTermRelationsById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of GO-Term to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOTermRelation"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-Term not found"          
+          
+  /models:
+    get:
+      tags:
+      - "models"
+      summary: "List all GO-CAMs"
+      description: "List all production GO-CAMs"
+      operationId: "getModels"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GOCAMSummaries"
+        400:
+          description: "Invalid status value"
+
+  /models/{id}:
+    get:
+      tags:
+      - "models"
+      summary: "Find GO-CAM by ID"
+      description: "Returns a single GO-CAM"
+      operationId: "getModelById"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "id"
+        in: "path"
+        description: "ID of GO-CAM to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOCAMSummary"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-CAM not found"
+
+  /models/last/{nb}:
+    get:
+      tags:
+      - "models"
+      summary: "Find Last {nb} GO-CAMs"
+      description: "Returns the last {nb} GO-CAMs"
+      operationId: "getLastModels"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "nb"
+        in: "path"
+        description: "Number of GO-CAM(s) to return"
+        required: true
+        type: "integer"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOCAMSummaries"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-CAM not found"
+
+  /models/go:
+    get:
+      tags:
+      - "models"
+      summary: "Find All GO-Terms by GO-CAM(s)"
+      description: "Returns All GO-Terms related to some GO-CAM(s)"
+      operationId: "getGOByModels"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gocams"
+        in: "query"
+        description: "List of GO-CAMs"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOCAMsAllTerms"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-CAM not found"
+
+  /models/bp:
+    get:
+      tags:
+      - "models"
+      summary: "Find Biological Processes by GO-CAM(s)"
+      description: "Returns Biological Processes related to some GO-CAM(s)"
+      operationId: "getBPByModels"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gocams"
+        in: "query"
+        description: "List of GO-CAMs"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOCAMsTerms"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-CAM not found"
+
+  /models/mf:
+    get:
+      tags:
+      - "models"
+      summary: "Find Molecular Functions by GO-CAM(s)"
+      description: "Returns Molecular Functions related to some GO-CAM(s)"
+      operationId: "getMFByModels"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gocams"
+        in: "query"
+        description: "List of GO-CAMs"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOCAMsTerms"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-CAM not found"
+
+  /models/cc:
+    get:
+      tags:
+      - "models"
+      summary: "Find Cellular Components by GO-CAM(s)"
+      description: "Returns Cellular Components related to some GO-CAM(s)"
+      operationId: "getCCByModels"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "gocams"
+        in: "query"
+        description: "List of GO-CAMs"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GOCAMsTerms"
+        400:
+          description: "Invalid ID supplied"
+        404:
+          description: "GO-CAM not found"
+
+
+
+  /groups:
+    get:
+      tags:
+      - "groups"
+      summary: "List all Groups"
+      description: "List all Groups producing GO-CAMs"
+      operationId: "getGroups"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Groups"
+        400:
+          description: "Invalid status value"
+
+  /groups/details:
+    get:
+      tags:
+      - "groups"
+      summary: "List all Groups with Details"
+      description: "List all Groups producing GO-CAMs with Details"
+      operationId: "getGroupsDetails"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/GroupsDetails"
+        400:
+          description: "Invalid status value"
+
+  /groups/{name}:
+    get:
+      tags:
+      - "groups"
+      summary: "Find Group by Name"
+      description: "Returns a single Group"
+      operationId: "getGroupByName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Name of Group to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/Group"
+        400:
+          description: "Invalid name supplied"
+        404:
+          description: "Group not found"
+
+  /groups/{name}/details:
+    get:
+      tags:
+      - "groups"
+      summary: "Find Group Details by Name"
+      description: "Returns a single Group Details"
+      operationId: "getGroupDetailsByName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "name"
+        in: "path"
+        description: "Name of Group to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/GroupDetails"
+        400:
+          description: "Invalid name supplied"
+        404:
+          description: "Group not found"
+
+
+
+
+
+  /users:
+    get:
+      tags:
+      - "users"
+      summary: "List all Users"
+      description: "List all Users producing GO-CAMs"
+      operationId: "getUsers"
+      produces:
+      - "application/json"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Users"
+        400:
+          description: "Invalid status value"
+
+  /users/{orcid}:
+    get:
+      tags:
+      - "users"
+      summary: "Find User by ORCID"
+      description: "Returns a single Group"
+      operationId: "getUserByORCID"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "orcid"
+        in: "path"
+        description: "Name of ORCID to return"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid name supplied"
+        404:
+          description: "User not found"
+
+
+
+definitions:
+
+  GOCAMSummary:
+    type: "object"
+    required:
+    - "gocam"
+    - "groupids"
+    properties:
+      gocam:
+        type: "string"
+      date:
+        type: "string"
+      title:
+        type: "string"
+      orcids:
+        type: "array"
+        items:
+          type: "string"
+      names:
+        type: "array"
+        items:
+          type: "string"
+      groupids:
+        type: "array"
+        items:
+          type: "string"
+      groupnames:
+        type: "array"
+        items:
+          type: "string"
+
+  GOCAMSummaries:
+    type: "array"
+    items:
+      $ref: "#/definitions/GOCAMSummary"
+      
+      
+  GOCAMTerms:
+    type: "object"
+    properties:
+      gocam:
+        type: "string"
+      goids:
+        type: "array"
+        items:
+          type: "string"
+      gonames:
+        type: "array"
+        items:
+          type: "string"
+      definitions:
+        type: "array"
+        items:
+          type: "string"
+            
+  GOCAMsTerms:
+    type: "array"
+    items:
+      $ref: "#/definitions/GOCAMTerms"
+
+
+
+
+  GOCAMAllTerms:
+    type: "object"
+    properties:
+      gocam:
+        type: "string"
+      goclasses:
+        type: "array"
+        items:
+          type: "string"
+      goids:
+        type: "array"
+        items:
+          type: "string"
+      gonames:
+        type: "array"
+        items:
+          type: "string"
+      definitions:
+        type: "array"
+        items:
+          type: "string"
+
+  GOCAMsAllTerms:
+    type: "array"
+    items:
+      $ref: "#/definitions/GOCAMAllTerms"
+
+
+
+
+  Group:
+    type: "object"
+    properties:
+      name:
+        type: "string"
+      url:
+        type: "string"
+      members:
+        type: "integer"
+      gocams:
+        type: "integer"
+
+  Groups:
+    type: "array"
+    items:
+      $ref: "#/definitions/Group"
+
+
+
+
+
+  GroupDetails:
+    type: "object"
+    required:
+    - "name"
+    properties:
+      name:
+        type: "string"
+      url:
+        type: "string"
+      membersOrcid:
+        type: "array"
+        items:
+          type: "string"
+      membersName:
+        type: "array"
+        items:
+          type: "string"
+      gocams:
+        type: "array"
+        items:
+          type: "string"
+      gocamstitles:
+        type: "array"
+        items:
+          type: "string"
+
+  GroupsDetails:
+    type: "array"
+    items:
+      $ref: "#/definitions/GroupDetails"
+
+
+
+
+  User:
+    type: "object"
+    required:
+    - "orcid"
+    properties:
+      orcid:
+        type: "string"
+      name:
+        type: "string"
+      organizations:
+        type: "array"
+        items:
+          type: "string"
+      affiliations:
+        type: "array"
+        items:
+          type: "string"
+      gocams:
+        type: "integer"
+
+  Users:
+    type: "array"
+    items:
+      $ref: "#/definitions/User"
+      
+      
+      
+  GOTerm:
+    type: "object"
+    properties:
+      oboid:
+        type: "string"
+      namespace:
+        type: "string"
+      definition:
+        type: "string"
+      comment:
+        type: "string"
+      synonyms:
+        type: "array"
+        items:
+          type: "string"
+      subsets:
+        type: "array"
+        items:
+          type: "string"
+
+  GOTermRelation:
+    type: "object"
+    properties:
+      relation:
+        type: "string"
+      goid:
+        type: "string"
+      goname:
+        type: "string"
