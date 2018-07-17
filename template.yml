@@ -154,33 +154,6 @@ Resources:
             Method: get
 
 
-        # Get Information on Biological Process
-        GetBPs:
-          Type: Api
-          Properties:
-            Path: /bp
-            Method: get
-        GetBP:
-          Type: Api
-          Properties:
-            Path: /bp/{id}
-            Method: get
-        GetBPUsers:
-          Type: Api
-          Properties:
-            Path: /bp/{id}/users
-            Method: get            
-        GetBPAuthors:
-          Type: Api
-          Properties:
-            Path: /bp/{id}/authors
-            Method: get            
-        GetBPModels:
-          Type: Api
-          Properties:
-            Path: /bp/{id}/models
-            Method: get            
-
 
 
 
