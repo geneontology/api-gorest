@@ -142,3 +142,56 @@ Resources:
           Properties:
             Path: /users/{orcid}/models
             Method: get
+        GetUserBPs:
+          Type: Api
+          Properties:
+            Path: /users/{orcid}/bp
+            Method: get
+        GetUserGPs:
+          Type: Api
+          Properties:
+            Path: /users/{orcid}/gp
+            Method: get
+
+
+        # Get Information on Biological Process
+        GetBPs:
+          Type: Api
+          Properties:
+            Path: /bp
+            Method: get
+        GetBP:
+          Type: Api
+          Properties:
+            Path: /bp/{id}
+            Method: get
+        GetBPUsers:
+          Type: Api
+          Properties:
+            Path: /bp/{id}/users
+            Method: get            
+        GetBPAuthors:
+          Type: Api
+          Properties:
+            Path: /bp/{id}/authors
+            Method: get            
+
+
+
+
+        # Get Information on Biological Process
+        GetGOs:
+          Type: Api
+          Properties:
+            Path: /go
+            Method: get
+        GetGO:
+          Type: Api
+          Properties:
+            Path: /go/{id}
+            Method: get
+        GetGOHierarchy:
+          Type: Api
+          Properties:
+            Path: /go/{id}/hierarchy
+            Method: get

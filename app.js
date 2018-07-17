@@ -3,6 +3,7 @@ var express = require('express'),
     request = require('request');
 
 var sparqlModels = require('./queries/sparql-models'),
+    sparqlGPs = require('./queries/sparql-gp'),
     sparqlGOs = require('./queries/sparql-go'),
     sparqlGroups = require('./queries/sparql-groups'),
     sparqlUsers = require('./queries/sparql-users');
@@ -101,6 +102,15 @@ app.get('/users/:orcid', function(req, res) {
   utils.fetchAndSend(res, sparqlUsers.UserMeta(req.params.orcid), true, keysArrayUser);
 });
 
+keysArrayUserModels = ["bpids", "bpnames", "gpids", "gpnames"];
+app.get('/users/:orcid/models', function(req, res) {
+  utils.fetchAndSend(res, sparqlUsers.UserModels(req.params.orcid), false, keysArrayUserModels);
+});
+
+keysArrayUserGPs = ["gocams", "dates", "titles"];
+app.get('/users/:orcid/gp', function(req, res) {
+  utils.fetchAndSend(res, sparqlUsers.UserGPs(req.params.orcid), false, keysArrayUserGPs);
+});
 
 
 
@@ -118,6 +128,22 @@ app.get('/groups/:name', function(req, res) {
   utils.fetchAndSend(res, sparqlGroups.GroupMeta(req.params.name), true);
 });
 
+
+
+// ================================================================================
+//
+//                           ROUTES: /go
+//
+// ================================================================================
+
+keysArrayGO = ["synonyms", "relatedSynonyms", "alternativeIds", "xrefs", "subsets"]
+app.get('/go/:id', function(req, res) {
+  utils.fetchAndSend(res, sparqlGOs.getSummary(req.params.id), true, keysArrayGO);
+});
+
+app.get('/go/:id/hierarchy', function(req, res) {
+  utils.fetchAndSend(res, sparqlGOs.getHierarchy(req.params.id));
+});
 
 
 // Export your Express configuration so that it can be consumed by the Lambda handler

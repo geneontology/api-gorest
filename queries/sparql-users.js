@@ -140,19 +140,19 @@ module.exports = {
         PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
             
 		SELECT  ?gocam ?date ?title	(GROUP_CONCAT(distinct ?spec;separator="` + separator + `") as ?species)
-									(GROUP_CONCAT(distinct ?goid;separator="` + separator + `") as ?bpIDs)
-									(GROUP_CONCAT(distinct ?goname;separator="` + separator + `") as ?bpNames)
-									(GROUP_CONCAT(distinct ?gpid;separator="` + separator + `") as ?gpIDs)
-									(GROUP_CONCAT(distinct ?gpname;separator="` + separator + `") as ?gpNames)
+									(GROUP_CONCAT(distinct ?goid;separator="` + separator + `") as ?bpids)
+									(GROUP_CONCAT(distinct ?goname;separator="` + separator + `") as ?bpnames)
+									(GROUP_CONCAT(distinct ?gpid;separator="` + separator + `") as ?gpids)
+									(GROUP_CONCAT(distinct ?gpname;separator="` + separator + `") as ?gpnames)
         WHERE 
         {
-            BIND(` + modOrcid + ` as ?orcid) .
             #BIND("SynGO:SynGO-pim"^^xsd:string as ?orcid) .
             #BIND("http://orcid.org/0000-0001-7476-6306"^^xsd:string as ?orcid)
             #BIND("http://orcid.org/0000-0003-1074-8103"^^xsd:string as ?orcid) .
+          	#BIND("http://orcid.org/0000-0001-5259-4945"^^xsd:string as ?orcid) .
               
+            BIND(` + modOrcid + ` as ?orcid) .
             BIND(IRI(?orcid) as ?orcidIRI) .
-              
                       
             # Getting some information on the model
             GRAPH ?gocam 
@@ -192,18 +192,17 @@ module.exports = {
                 ?affiliationIRI rdfs:label ?affiliation
             } .
               
+          
+          	# Require each GP to have a correct URI, not the case for SYNGO at this time
+          	optional {
   			?gpid rdfs:label ?gpname .
   
-            ?gpid obo:id ?GP .
-            ?oboid obo:id ?GP .
-            FILTER (contains(str(?oboid), "/obo/")) .    
-                    
-            ?oboid rdfs:subClassOf ?v0 . 
+            ?gpid rdfs:subClassOf ?v0 . 
             ?v0 owl:onProperty <http://purl.obolibrary.org/obo/RO_0002162> . 
             ?v0 owl:someValuesFrom ?taxon .
                   
-            ?oboid rdfs:label ?name .
             ?taxon rdfs:label ?spec .  
+            }
   
               
         }
@@ -215,7 +214,7 @@ module.exports = {
 
 
     /* Return all the GPs used by a given contributor */
-    SPARQL_UserGPs(orcid) {
+    UserGPs(orcid) {
         var modOrcid = utils.getOrcid(orcid);
         var encoded = encodeURIComponent(`
         PREFIX metago: <http://model.geneontology.org/>
@@ -231,11 +230,16 @@ module.exports = {
         PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
         PREFIX biomacromolecule: <http://purl.obolibrary.org/obo/CHEBI_33694>
            
-        SELECT ?identifier ?oboid ?name ?species (count(?name) as ?usages)  (GROUP_CONCAT(?cam;separator="` + this.separator + `") as ?gocams)
-                                                                            (GROUP_CONCAT(?date;separator="` + this.separator + `") as ?dates)
-                                                                            (GROUP_CONCAT(?title;separator="` + this.separator + `") as ?titles)
+        SELECT ?identifier ?name ?species (count(?name) as ?usages)         (GROUP_CONCAT(?cam;separator="` + separator + `") as ?gocams)
+                                                                            (GROUP_CONCAT(?date;separator="` + separator + `") as ?dates)
+                                                                            (GROUP_CONCAT(?title;separator="` + separator + `") as ?titles)
         WHERE 
         {
+            #BIND("SynGO:SynGO-pim"^^xsd:string as ?orcid) .
+            #BIND("http://orcid.org/0000-0001-7476-6306"^^xsd:string as ?orcid)
+            #BIND("http://orcid.org/0000-0003-1074-8103"^^xsd:string as ?orcid) .
+          	#BIND("http://orcid.org/0000-0001-5259-4945"^^xsd:string as ?orcid) .
+
             BIND(` + modOrcid + ` as ?orcid)      
             BIND(IRI(?orcid) as ?orcidIRI) .
                          
@@ -250,20 +254,17 @@ module.exports = {
                 ?id rdf:type ?identifier .
                 FILTER(?identifier != owl:NamedIndividual) .  			
             }
-              
-            # doing the bad join on obo:id literal since enabled_by does not provide the purl obo address
-            ?identifier obo:id ?GP .
-            ?oboid obo:id ?GP .
-            FILTER (contains(str(?oboid), "/obo/")) .    
-                    
-            ?oboid rdfs:subClassOf ?v0 . 
+
+            ?identifier rdfs:label ?name .
+
+            ?identifier rdfs:subClassOf ?v0 . 
             ?v0 owl:onProperty <http://purl.obolibrary.org/obo/RO_0002162> . 
-            ?v0 owl:someValuesFrom ?taxon .
-                  
-            ?oboid rdfs:label ?name .
-            ?taxon rdfs:label ?species .            
+            ?v0 owl:someValuesFrom ?taxon .                  
+            ?taxon rdfs:label ?species .                  
+
+            
         }
-        GROUP BY ?identifier ?oboid ?name ?species
+        GROUP BY ?identifier ?name ?species
         ORDER BY DESC(?usages)
         `);
         return "?query=" + encoded;
