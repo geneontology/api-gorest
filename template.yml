@@ -175,6 +175,11 @@ Resources:
           Properties:
             Path: /bp/{id}/authors
             Method: get            
+        GetBPModels:
+          Type: Api
+          Properties:
+            Path: /bp/{id}/models
+            Method: get            
 
 
 
@@ -195,3 +200,38 @@ Resources:
           Properties:
             Path: /go/{id}/hierarchy
             Method: get
+        GetGOUsers:
+          Type: Api
+          Properties:
+            Path: /go/{id}/users
+            Method: get
+        GetGOAuthors:
+          Type: Api
+          Properties:
+            Path: /go/{id}/authors
+            Method: get
+        GetGOModels:
+          Type: Api
+          Properties:
+            Path: /go/{id}/models
+            Method: get
+
+
+
+        # Get Information on Gene Products
+        GetGPs:
+          Type: Api
+          Properties:
+            Path: /gp
+            Method: get
+        GetGP:
+          Type: Api
+          Properties:
+            Path: /gp/{id}
+            Method: get
+        GetGPModels:
+          Type: Api
+          Properties:
+            Path: /gp/{id}/models
+            Method: get
+
