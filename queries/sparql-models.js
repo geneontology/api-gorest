@@ -118,19 +118,19 @@ module.exports = {
         PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
         PREFIX CC: <http://purl.obolibrary.org/obo/GO_0005575>
 
-        SELECT  ?models (GROUP_CONCAT(?GO;separator="` + separator + `") as ?bpIDs) 
+        SELECT  ?gocam  (GROUP_CONCAT(?GO;separator="` + separator + `") as ?bpIDs) 
 		        		(GROUP_CONCAT(?label;separator="` + separator + `") as ?bpNames)
 				        (GROUP_CONCAT(?definition;separator="` + separator + `") as ?definitions)
         WHERE 
         {
-  		    VALUES ?models { ` + models + ` }
+  		    VALUES ?gocam { ` + models + ` }
   
             VALUES ?GO_classes { BP: MF: CC:  } .
    		    {
      		    SELECT * WHERE { ?GO_classes rdfs:label ?GO_class . }
  		    }
 
-  		    GRAPH ?models {
+  		    GRAPH ?gocam {
                 ?GO rdf:type owl:Class .
             }
             ?GO rdfs:subClassOf+ ?GO_classes .
@@ -143,7 +143,7 @@ module.exports = {
 	    	    }
   		    }
         }
-        GROUP BY ?models
+        GROUP BY ?gocam
         `);
         return "?query=" + encoded;
     },    
@@ -267,13 +267,13 @@ module.exports = {
         PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>
         PREFIX in_taxon: <http://purl.obolibrary.org/obo/RO_0002162>
 
-        SELECT ?models  (GROUP_CONCAT(distinct ?identifier;separator="` + separator + `") as ?gpnames)
+        SELECT ?gocam   (GROUP_CONCAT(distinct ?identifier;separator="` + separator + `") as ?gpnames)
 			        	(GROUP_CONCAT(distinct ?name;separator="` + separator + `") as ?gpids)
 
         WHERE 
         {
-            GRAPH ?models {
-            ?models metago:graphType metago:noctuaCam .
+            GRAPH ?gocam {
+            ?gocam metago:graphType metago:noctuaCam .
             ?s enabled_by: ?gpnode .    
             ?gpnode rdf:type ?identifier .
             FILTER(?identifier != owl:NamedIndividual) .         
@@ -284,7 +284,7 @@ module.exports = {
   
         BIND(IF(bound(?name), ?name, ?identifier) as ?name)
         }
-        GROUP BY ?models
+        GROUP BY ?gocam
         `);
         return "?query=" + encoded;
     },

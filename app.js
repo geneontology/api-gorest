@@ -27,10 +27,13 @@ app.get('/', function(req, res) {
 
 keysArrayModels = ["orcids", "names", "groupids", "groupnames"];
 app.get('/models', function(req, res) {
+  // send a range of models (start, start + size)
   if(req.query.start && req.query.size) {
     utils.fetchAndSend(res, sparqlModels.ModelList(req.query.start, req.query.size), false, keysArrayModels);
+  // send the <last> models
   } else if(req.query.last) {
     utils.fetchAndSend(res, sparqlModels.ModelList(0, req.query.last), false, keysArrayModels);
+  // send all models
   } else {
     utils.fetchAndSend(res, sparqlModels.ModelList(), false, keysArrayModels);
   }
