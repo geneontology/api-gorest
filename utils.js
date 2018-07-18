@@ -60,9 +60,9 @@ module.exports = {
         var transformed = {};
         Object.keys(data).forEach(key => {
             if (keysArray && keysArray.includes(key)) {
-                transformed[key] = data[key].value.split(config.separator);
+                transformed[key] = this.splitTrim(data[key].value, config.separator);
             } else {
-                transformed[key] = data[key].value;
+                transformed[key] = data[key].value.trim();
             }
         });
         return transformed;
@@ -97,11 +97,11 @@ module.exports = {
             prefix = "";
         if (!suffix)
             suffix = "";
+
         var array = string.split(split);
-        for (var i = 0; i < array.length; i++) {
-            array[i] = prefix + array[i].trim() + suffix;
-        }
-        return array;
+        return array.map(item => {
+            return prefix + item.trim() + suffix;
+        });
     },
 
 

@@ -121,8 +121,13 @@ app.get('/users/:orcid/gp', function(req, res) {
 //
 // ================================================================================
 
-app.get('/groups', function(req, res) {
+app.get('/groups', function(req, res) {  
   utils.fetchAndSend(res, sparqlGroups.GroupList());
+});
+
+keysArrayGroups = ["membersOrcid", "membersName", "modelsList", "titlesList"]
+app.get('/groups/details', function(req, res) {
+  utils.fetchAndSend(res, sparqlGroups.GroupListDetails(), false, keysArrayGroups);
 });
 
 app.get('/groups/:name', function(req, res) {
