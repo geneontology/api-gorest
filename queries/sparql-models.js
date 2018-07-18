@@ -267,8 +267,8 @@ module.exports = {
         PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>
         PREFIX in_taxon: <http://purl.obolibrary.org/obo/RO_0002162>
 
-        SELECT ?gocam   (GROUP_CONCAT(distinct ?identifier;separator="` + separator + `") as ?gpnames)
-			        	(GROUP_CONCAT(distinct ?name;separator="` + separator + `") as ?gpids)
+        SELECT ?gocam   (GROUP_CONCAT(distinct ?identifier;separator="` + separator + `") as ?gpids)
+			        	(GROUP_CONCAT(distinct ?name;separator="` + separator + `") as ?gpnames)
 
         WHERE 
         {
