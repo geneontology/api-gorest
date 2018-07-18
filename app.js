@@ -122,11 +122,11 @@ app.get('/users/:orcid/gp', function(req, res) {
 // ================================================================================
 
 app.get('/groups', function(req, res) {
-  utils.fetchAndSend(res, sparqlGroups.GroupList(), false);
+  utils.fetchAndSend(res, sparqlGroups.GroupList());
 });
 
 app.get('/groups/:name', function(req, res) {
-  utils.fetchAndSend(res, sparqlGroups.GroupMeta(req.params.name), true);
+  utils.fetchAndSend(res, sparqlGroups.GroupMeta(req.params.name));
 });
 
 
