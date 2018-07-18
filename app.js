@@ -28,9 +28,9 @@ app.get('/', function(req, res) {
 keysArrayModels = ["orcids", "names", "groupids", "groupnames"];
 app.get('/models', function(req, res) {
   if(req.query.start && req.query.size) {
-    utils.fetchAndSend(res, sparqlModels.ModelListRange(req.query.start, req.query.size), false, keysArrayModels);
+    utils.fetchAndSend(res, sparqlModels.ModelList(req.query.start, req.query.size), false, keysArrayModels);
   } else if(req.query.last) {
-    utils.fetchAndSend(res, sparqlModels.LastModels(req.query.last), false, keysArrayModels);
+    utils.fetchAndSend(res, sparqlModels.ModelList(0, req.query.last), false, keysArrayModels);
   } else {
     utils.fetchAndSend(res, sparqlModels.ModelList(), false, keysArrayModels);
   }
