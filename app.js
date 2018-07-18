@@ -29,13 +29,11 @@ keysArrayModels = ["orcids", "names", "groupids", "groupnames"];
 app.get('/models', function(req, res) {
   if(req.query.start && req.query.size) {
     utils.fetchAndSend(res, sparqlModels.ModelListRange(req.query.start, req.query.size), false, keysArrayModels);
+  } else if(req.query.last) {
+    utils.fetchAndSend(res, sparqlModels.LastModels(req.query.last), false, keysArrayModels);
   } else {
     utils.fetchAndSend(res, sparqlModels.ModelList(), false, keysArrayModels);
   }
-});
-
-app.get('/models/last/:nb', function(req, res) {
-  utils.fetchAndSend(res, sparqlModels.LastModels(req.params.nb), false, keysArrayModels);
 });
 
 // Must combine the results per gocam

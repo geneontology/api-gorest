@@ -53,12 +53,6 @@ Resources:
           !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 
       Events:
-        # API Gateway event to trigger this lambda function
-        GetRoot:
-          Type: Api
-          Properties:
-            Path: /
-            Method: get
 
         # this will create another event triggering the same lambda function
         GetModels:
@@ -73,30 +67,10 @@ Resources:
             Path: /models/{id}
             Method: get
         # this will create yet another event triggering the same lambda function
-        GetLastModels:
-          Type: Api
-          Properties:
-            Path: /models/last/{nb}
-            Method: get
         GetModelGOs:
           Type: Api
           Properties:
             Path: /models/go
-            Method: get
-        GetModelBPs:
-          Type: Api
-          Properties:
-            Path: /models/bp
-            Method: get
-        GetModelMFs:
-          Type: Api
-          Properties:
-            Path: /models/mf
-            Method: get
-        GetModelCCs:
-          Type: Api
-          Properties:
-            Path: /models/cc
             Method: get
         GetModelGPs:
           Type: Api
@@ -108,7 +82,6 @@ Resources:
           Properties:
             Path: /models/pmid
             Method: get
-            
 
         GetGroups:
           Type: Api
@@ -125,7 +98,6 @@ Resources:
           Properties:
             Path: /groups/{name}/details
             Method: get            
-
 
         GetUsers:
           Type: Api
@@ -153,10 +125,6 @@ Resources:
             Path: /users/{orcid}/gp
             Method: get
 
-
-
-
-
         # Get Information on Biological Process
         GetGOs:
           Type: Api
@@ -178,18 +146,11 @@ Resources:
           Properties:
             Path: /go/{id}/users
             Method: get
-        GetGOAuthors:
-          Type: Api
-          Properties:
-            Path: /go/{id}/authors
-            Method: get
         GetGOModels:
           Type: Api
           Properties:
             Path: /go/{id}/models
             Method: get
-
-
 
         # Get Information on Gene Products
         GetGPs:
@@ -207,4 +168,3 @@ Resources:
           Properties:
             Path: /gp/{id}/models
             Method: get
-
