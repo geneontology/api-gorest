@@ -96,7 +96,7 @@ Resources:
         GetGroupDetails:
           Type: Api
           Properties:
-            Path: /groups/{name}/details
+            Path: /groups/details
             Method: get            
 
         GetUsers:
