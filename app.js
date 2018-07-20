@@ -5,6 +5,7 @@ var express = require('express'),
 var sparqlModels = require('./queries/sparql-models'),
     sparqlGPs = require('./queries/sparql-gp'),
     sparqlGOs = require('./queries/sparql-go'),
+    sparqlPMIDs = require('./queries/sparql-pmids'),
     sparqlGroups = require('./queries/sparql-groups'),
     sparqlUsers = require('./queries/sparql-users');
 
@@ -15,6 +16,8 @@ var utils = require('./utils');
 app.get('/', function(req, res) {
   res.send( { "message": "Welcome to api.geneontology.cloud" } );
 });
+
+
 
 
 
@@ -87,6 +90,8 @@ app.get('/models/:id', function(req, res) {
 
 
 
+
+
 // ================================================================================
 //
 //                           ROUTES: /users
@@ -115,6 +120,9 @@ app.get('/users/:orcid/gp', function(req, res) {
 
 
 
+
+
+
 // ================================================================================
 //
 //                           ROUTES: /groups
@@ -136,6 +144,9 @@ app.get('/groups/:name', function(req, res) {
 
 
 
+
+
+
 // ================================================================================
 //
 //                           ROUTES: /go
@@ -147,9 +158,44 @@ app.get('/go/:id', function(req, res) {
   utils.fetchAndSend(res, sparqlGOs.getSummary(req.params.id), true, keysArrayGO);
 });
 
+app.get('/go/:id/models', function(req, res) {
+  utils.fetchAndSend(res, sparqlGOs.getGOModels(req.params.id));
+});
+
 app.get('/go/:id/hierarchy', function(req, res) {
   utils.fetchAndSend(res, sparqlGOs.getHierarchy(req.params.id));
 });
+
+
+
+
+
+
+// ================================================================================
+//
+//                           ROUTES: /gp
+//
+// ================================================================================
+
+app.get('/gp/:id/models', function(req, res) {
+  utils.fetchAndSend(res, sparqlGPs.getGPModels(req.params.id));
+});
+
+
+
+
+
+
+// ================================================================================
+//
+//                           ROUTES: /pmid
+//
+// ================================================================================
+
+app.get('/pmid/:id/models', function(req, res) {
+  utils.fetchAndSend(res, sparqlPMIDs.getPMIDModels(req.params.id));
+});
+
 
 
 // Export your Express configuration so that it can be consumed by the Lambda handler

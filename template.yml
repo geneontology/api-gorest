@@ -168,3 +168,11 @@ Resources:
           Properties:
             Path: /gp/{id}/models
             Method: get
+
+
+        GetPMIDModels:
+          Type: Api
+          Properties:
+            Path: /pmid/{id}/models
+            Method: get
+

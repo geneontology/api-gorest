@@ -58,6 +58,30 @@ module.exports = {
 		GROUP BY ?goid ?label ?definition ?comment ?creation_date
         `);
 		return "?query=" + encoded;
+	},
+
+
+	getGOModels(go) {
+		go = go.replace(":", "_");
+		var encoded = encodeURIComponent(`
+    	PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        PREFIX metago: <http://model.geneontology.org/>
+    	PREFIX owl: <http://www.w3.org/2002/07/owl#>
+
+		SELECT distinct ?gocam
+        WHERE 
+        {
+	        GRAPH ?gocam {
+    	        ?gocam metago:graphType metago:noctuaCam .    
+                ?entity rdf:type owl:NamedIndividual .
+    			?entity rdf:type ?goid .
+                FILTER(?goid = <http://purl.obolibrary.org/obo/` + go + `>)
+            }
+
+        }
+		`);
+		return "?query=" + encoded;
 	}
 
 }
