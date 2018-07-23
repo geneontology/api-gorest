@@ -276,7 +276,8 @@ module.exports = {
             ?gocam metago:graphType metago:noctuaCam .
             ?s enabled_by: ?gpnode .    
             ?gpnode rdf:type ?identifier .
-            FILTER(?identifier != owl:NamedIndividual) .         
+            FILTER(?identifier != owl:NamedIndividual) .
+            FILTER(!contains(str(?gocam), "_inferred"))
         }
         optional {
     	    ?identifier rdfs:label ?name
