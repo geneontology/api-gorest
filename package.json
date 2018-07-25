@@ -1,6 +1,6 @@
 {
-    "name": "express-HelloWorld",
-    "description": "Hello World ExpressJS WebService",
+    "name": "api-gorest",
+    "description": "API to access GO and GO-CAM data from the Gene Ontology Consortium",
     "version": "0.0.1",
     "private": true,
     "dependencies": {
@@ -15,5 +15,11 @@
     },
     "scripts": {
         "test": "mocha --recursive tests"
-    }
+    },
+    "author": "Laurent-Philippe Albou",
+    "license": "BSD",
+    "bugs": {
+        "url": "https://github.com/geneontology/api-gorest/issues"
+    },
+    "homepage": "https://github.com/geneontology/api-gorest#readme"
 }
