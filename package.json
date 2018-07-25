@@ -16,6 +16,13 @@
     "scripts": {
         "test": "mocha --recursive tests"
     },
+    "keywords": [
+        "Gene Ontology",
+        "GO",
+        "API",
+        "REST",
+        "SAM"
+    ],
     "author": "Laurent-Philippe Albou",
     "license": "BSD",
     "bugs": {
