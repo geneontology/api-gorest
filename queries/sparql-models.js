@@ -272,17 +272,17 @@ module.exports = {
         WHERE 
         {
             GRAPH ?gocam {
-            ?gocam metago:graphType metago:noctuaCam .
-            ?s enabled_by: ?gpnode .    
-            ?gpnode rdf:type ?identifier .
-            FILTER(?identifier != owl:NamedIndividual) .
-            FILTER(!contains(str(?gocam), "_inferred"))
-        }
-        optional {
-    	    ?identifier rdfs:label ?name
-        }
+                ?gocam metago:graphType metago:noctuaCam .
+                ?s enabled_by: ?gpnode .    
+                ?gpnode rdf:type ?identifier .
+                FILTER(?identifier != owl:NamedIndividual) .
+                FILTER(!contains(str(?gocam), "_inferred"))
+            }
+            optional {
+        	    ?identifier rdfs:label ?name
+            }
   
-        BIND(IF(bound(?name), ?name, ?identifier) as ?name)
+            BIND(IF(bound(?name), ?name, ?identifier) as ?name)
         }
         GROUP BY ?gocam
         `);
