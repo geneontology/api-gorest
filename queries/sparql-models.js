@@ -195,7 +195,6 @@ module.exports = {
             values ?gocam { ` + models + ` }
 
             GRAPH ?gocam {
-                ?gocam metago:graphType metago:noctuaCam .    	
                 ?s dc:source ?source .
                 BIND(REPLACE(?source, " ", "") AS ?source) .
                 FILTER((CONTAINS(?source, "PMID")))
