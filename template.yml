@@ -175,5 +175,5 @@ Resources:
         GetAssociation:
           Type: Api
           Properties:
-            Path: /association/between/{subject}/{object}/{type}
+            Path: /association/{subject}/{object}/{type}
             Method: get
