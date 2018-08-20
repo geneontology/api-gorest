@@ -169,13 +169,13 @@ app.get('/go/:id/hierarchy', function(req, res) {
 
 
 
-app.get('/association/:subject/:object', function(req, res) {
+app.get('/association/between/:subject/:object', function(req, res) {
   if(req.query.relation == "shared") {
     utils.golrSharedClass(res, req.params.subject, req.params.object);
 
   } else {
     utils.golrAssociation(res, req.params.subject, req.params.object, req.query.relation);
-    
+
   }
   // } else if(req.query.relation == "sharedclass") {
   //   utils.golrSharedClass(res, req.params.subject, req.params.object);
