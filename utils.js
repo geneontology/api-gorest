@@ -222,6 +222,220 @@ module.exports = {
         }
 
         return newJson;
+    },
+
+
+    fetchAndSendGOlr(expressResponse, url, sendOnlyFirst = false) {
+        var options = {
+            uri: url,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+
+        ut = this;
+        ut.addCORS(expressResponse);
+        request(options, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+                expressResponse.send({ "error" : error });
+            } else {
+
+                let data = JSON.parse(body).response.docs;
+                if (sendOnlyFirst)
+                    data = data[0];
+                expressResponse.json(data);
+            }
+        });
+    },
+
+
+    golrSubclass(expressResponse, subject, object) {
+        ut = this;
+        ut.addCORS(expressResponse);
+        
+        let golrSubject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + subject + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
+    
+        var options = {
+            uri: golrSubject,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        request(options, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+                expressResponse.send({ "error" : error });
+            } else {
+
+                let found = false;
+                let data = JSON.parse(body).response.docs[0];
+                data["isa_partof_closure"].forEach(elt => {
+                    if(elt == object) {
+                        found = true;
+                    }
+                });
+
+                // if not found, also search in label
+                if(!found) {
+                    data["isa_partof_closure_label"].forEach(elt => {
+                        if(elt == object) {
+                            found = true;
+                        }
+                    });
+                }       
+                expressResponse.send({ "result": found });
+
+            }
+        });
+    },
+
+    golrSharedClass(expressResponse, subject, object) {
+        ut = this;
+        ut.addCORS(expressResponse);
+        
+        let golrSubject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + subject + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
+        let golrObject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + object + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
+    
+        var options = {
+            uri: golrSubject,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        request(options, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+                expressResponse.send({ "error" : error });
+            } else {
+
+                let data = JSON.parse(body).response.docs[0];
+
+                var options2 = {
+                    uri: golrObject,
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                };
+        
+                request(options2, function (error, response, body) {
+                    if (error || response.statusCode != 200) {
+                        expressResponse.send({ "error" : error });
+                    } else {
+        
+                        let data2 = JSON.parse(body).response.docs[0];
+                        // console.log("\n****\nsubject: (" + subject + "): ", data["isa_partof_closure"]);
+                        // console.log("\n****\nobject: (" + object + "): ", data2["isa_partof_closure"]);
+
+                        let shared = [];
+                        let sharedLabels = [];
+                        let found;
+
+                        let list1 = data["isa_partof_closure"];
+                        let list2 = data2["isa_partof_closure"];
+                        for(let i = 0; i < list1.length; i++) {
+                            found = false;
+                            for(let j = 0; j < list2.length; j++) {
+                                if(list1[i] == list2[j]) {
+                                    found = true;
+                                }
+                            }
+                            if(found) {
+                                shared.push(list1[i]);
+                                sharedLabels.push(data["isa_partof_closure_label"][i]);
+                            }
+                        }
+
+                        let result = {
+                            "shared": shared,
+                            "shared_labels": sharedLabels
+                        }
+
+                        expressResponse.json(result);
+                        
+                    }
+                });
+
+            }
+        });
+    
+    },
+
+
+    golrClosestCommonClass(expressResponse, subject, object) {
+        ut = this;
+        ut.addCORS(expressResponse);
+        
+        let golrSubject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + subject + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
+        let golrObject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + object + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
+    
+        var options = {
+            uri: golrSubject,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        request(options, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+                expressResponse.send({ "error" : error });
+            } else {
+
+                let data = JSON.parse(body).response.docs[0];
+
+                var options2 = {
+                    uri: golrObject,
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                };
+        
+                request(options2, function (error, response, body) {
+                    if (error || response.statusCode != 200) {
+                        expressResponse.send({ "error" : error });
+                    } else {
+        
+                        let data2 = JSON.parse(body).response.docs[0];
+
+                        let shared = [];
+                        let sharedLabels = [];
+                        let found;
+
+                        let list1 = data["isa_partof_closure"];
+                        let list2 = data2["isa_partof_closure"];
+                        for(let i = 0; i < list1.length; i++) {
+                            // don't include the object term as we are searching for its parents
+                            if(list1[i] == object)
+                                continue;
+
+                            found = false;
+                            for(let j = 0; j < list2.length; j++) {
+                                if(list1[i] == list2[j]) {
+                                    found = true;
+                                }
+                            }
+                            if(found) {
+                                shared.push(list1[i]);
+                                sharedLabels.push(data["isa_partof_closure_label"][i]);
+                            }
+                        }
+
+                        let result = {
+                            "shared": shared,
+                            "shared_labels": sharedLabels
+                        }
+
+                        expressResponse.json(result);
+                        
+                    }
+                });
+
+            }
+        });
+    
     }
+    
 
 }

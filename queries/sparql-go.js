@@ -82,6 +82,24 @@ module.exports = {
         }
 		`);
 		return "?query=" + encoded;
+	},
+
+
+	getSubClassOf(subject, target) {
+		subject = subject.replace(":", "_");
+		target = target.replace(":", "_");
+		var encoded =encodeURI(`
+        SELECT ?isSubClass WHERE {
+    		BIND(<http://purl.obolibrary.org/obo/` + subject + `> as ?goquery)
+		  	BIND(<http://purl.obolibrary.org/obo/` + target + `> as ?gotarget)
+
+			?goquery rdfs:subClassOf* ?parents .
+      	
+			FILTER(?parents = ?gotarget) .
+			BIND(IF(BOUND(?parents), "true", "false") as ?isSubClass)
+		}		
+		`);
+		return "?query=" + encoded;
 	}
 
 }

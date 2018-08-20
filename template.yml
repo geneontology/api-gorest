@@ -176,3 +176,11 @@ Resources:
             Path: /pmid/{id}/models
             Method: get
 
+
+        GetAssociation:
+          Type: Api
+          Properties:
+            Path: /association/{type}/{subject}/{object}
+            Method: get
+
+

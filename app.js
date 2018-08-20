@@ -169,6 +169,23 @@ app.get('/go/:id/hierarchy', function(req, res) {
 
 
 
+app.get('/association/:type/:subject/:object', function(req, res) {
+  if(req.params.type == "subclass") {
+    utils.golrSubclass(res, req.params.subject, req.params.object);
+
+  } else if(req.params.type == "sharedclass") {
+    utils.golrSharedClass(res, req.params.subject, req.params.object);
+
+  } else if(req.params.type == "closestclass") {
+    utils.golrClosestCommonClass(res, req.params.subject, req.params.object);
+
+  // } else if(req.params.type == "isa") {
+    
+  // } else if(req.params.type == "regulates") {
+
+  }
+});
+
 
 
 // ================================================================================
