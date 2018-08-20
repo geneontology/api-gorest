@@ -435,6 +435,69 @@ module.exports = {
             }
         });
     
+    },
+
+
+
+
+    golrAssociation(expressResponse, subject, object, relation) {
+        ut = this;
+        ut.addCORS(expressResponse);
+        
+        let associationField;
+        let golrSubject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + subject + "%22&wt=json"
+
+        switch(relation) {
+            case "isa":
+                golrSubject += "&fl=isa_closure,isa_closure_label";
+                associationField = "isa_closure";
+                break;
+            case "isa_partof":
+                golrSubject += "&fl=isa_partof_closure,isa_partof_closure_label";
+                associationField = "isa_partof_closure";
+                break;
+            case "regulates":
+                golrSubject += "&fl=regulates_closure,regulates_closure_label";
+                associationField = "regulates_closure";
+                break;
+            default:
+                golrSubject += "&fl=isa_partof_closure,isa_partof_closure_label";
+                associationField = "isa_partof_closure";
+                break;
+        }
+    
+        var options = {
+            uri: golrSubject,
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json'
+            }
+        };
+        request(options, function (error, response, body) {
+            if (error || response.statusCode != 200) {
+                expressResponse.send({ "error" : error });
+            } else {
+
+                let found = false;
+                let data = JSON.parse(body).response.docs[0];
+                data[associationField].forEach(elt => {
+                    if(elt == object) {
+                        found = true;
+                    }
+                });
+
+                // if not found, also search in label
+                if(!found) {
+                    data[associationField + "_label"].forEach(elt => {
+                        if(elt == object) {
+                            found = true;
+                        }
+                    });
+                }       
+                expressResponse.send({ "result": found });
+
+            }
+        });
     }
     
 
