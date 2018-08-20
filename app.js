@@ -169,7 +169,7 @@ app.get('/go/:id/hierarchy', function(req, res) {
 
 
 
-app.get('/association/:type/:subject/:object', function(req, res) {
+app.get('/association/between/:subject/:object/:type', function(req, res) {
   if(req.params.type == "subclass") {
     utils.golrSubclass(res, req.params.subject, req.params.object);
 

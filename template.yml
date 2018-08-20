@@ -180,7 +180,7 @@ Resources:
         GetAssociation:
           Type: Api
           Properties:
-            Path: /association/{type}/{subject}/{object}
+            Path: /association/between/{subject}/{object}/{type}
             Method: get
 
 
