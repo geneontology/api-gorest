@@ -133,10 +133,10 @@ app.get('/groups', function(req, res) {
   utils.fetchAndSend(res, sparqlGroups.GroupList());
 });
 
-keysArrayGroups = ["membersOrcid", "membersName", "modelsList", "titlesList"]
-app.get('/groups/details', function(req, res) {
-  utils.fetchAndSend(res, sparqlGroups.GroupListDetails(), false, keysArrayGroups);
-});
+// keysArrayGroups = ["membersOrcid", "membersName", "modelsList", "titlesList"]
+// app.get('/groups/details', function(req, res) {
+//   utils.fetchAndSend(res, sparqlGroups.GroupListDetails(), false, keysArrayGroups);
+// });
 
 app.get('/groups/:name', function(req, res) {
   utils.fetchAndSend(res, sparqlGroups.GroupMeta(req.params.name));
@@ -172,22 +172,9 @@ app.get('/go/:id/hierarchy', function(req, res) {
 app.get('/association/between/:subject/:object', function(req, res) {
   if(req.query.relation == "shared") {
     utils.golrSharedClass(res, req.params.subject, req.params.object);
-
   } else {
     utils.golrAssociation(res, req.params.subject, req.params.object, req.query.relation);
-
   }
-  // } else if(req.query.relation == "sharedclass") {
-  //   utils.golrSharedClass(res, req.params.subject, req.params.object);
-
-  // } else if(req.query.relation == "closestclass") {
-  //   utils.golrClosestCommonClass(res, req.params.subject, req.params.object);
-
-  // } else if(req.params.type == "isa") {
-    
-  // } else if(req.params.type == "regulates") {
-
-  // }
 });
 
 
