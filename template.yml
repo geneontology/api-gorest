@@ -16,13 +16,10 @@ Globals:
       AllowOrigin: "'*'"
 #    StageName: prod
 
-
 Parameters:
   ProjectId:
     Type: String
     Description: AWS CodeStar projectID used to associate new resources to team members
-
-
 
 Resources:
 #  APIGateway:
@@ -169,18 +166,14 @@ Resources:
             Path: /gp/{id}/models
             Method: get
 
-
         GetPMIDModels:
           Type: Api
           Properties:
             Path: /pmid/{id}/models
             Method: get
 
-
         GetAssociation:
           Type: Api
           Properties:
             Path: /association/between/{subject}/{object}/{type}
             Method: get
-
-
