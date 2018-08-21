@@ -41,12 +41,12 @@ Resources:
   LambdaFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Policies: GORESTLambdaDefaultAccess
       Handler: index.handler
       Environment:
         Variables:
           NODE_ENV: production
-      Role: arn:aws:iam::921647828195:role/AWSLambdaBasicRole
+#      Role: arn:aws:iam::921647828195:role/AWSLambdaBasicRole
+      Policies: GORESTLambdaDefaultAccess
 #        Fn::ImportValue:
 #          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 
