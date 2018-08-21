@@ -38,7 +38,7 @@ Resources:
 #            Parameters:
 #              Location: s3://<bucket>/swagger.yaml      
 
-  LambdaFunction:
+  LF:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
