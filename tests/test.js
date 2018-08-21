@@ -8,8 +8,8 @@ const request = supertest(app);
 
 describe('Tests app', function() {
   it('verifies get', function(done) {
-    request.get('/').expect(200).end(function(err, result) {
-        test.string(result.body.message).contains('api.geneontology');
+    request.get('/go/GO_0008150').expect(200).end(function(err, result) {
+        test.string(result.body.label).contains('biological_process');
         test.value(result).hasHeader('content-type', 'application/json; charset=utf-8');
         done(err);
     });
