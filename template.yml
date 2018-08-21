@@ -46,9 +46,9 @@ Resources:
       Environment:
         Variables:
           NODE_ENV: production
-      Role:
-        Fn::ImportValue:
-          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+      Role: arn:aws:iam::921647828195:role/AWSLambdaBasicRole
+#        Fn::ImportValue:
+#          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 
       Events:
         Proxy:
