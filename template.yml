@@ -42,13 +42,14 @@ Resources:
     Type: AWS::Serverless::Function
     Properties:
       Handler: index.handler
+      Role:
+        Fn::ImportValue:
+          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
+#      Role: arn:aws:iam::921647828195:role/AWSLambdaBasicRole
+#      Policies: GORESTLambdaDefaultAccess
       Environment:
         Variables:
           NODE_ENV: production
-#      Role: arn:aws:iam::921647828195:role/AWSLambdaBasicRole
-      Policies: GORESTLambdaDefaultAccess
-#        Fn::ImportValue:
-#          !Join ['-', [!Ref 'ProjectId', !Ref 'AWS::Region', 'LambdaTrustRole']]
 
       Events:
         Proxy:

@@ -13,9 +13,9 @@ var utils = require('./utils');
 
 
 
-app.get('/', function(req, res) {
-  res.send( { "message": "Welcome to api.geneontology.cloud" } );
-});
+// app.get('/', function(req, res) {
+//   res.send( { "message": "Welcome to api.geneontology.cloud" } );
+// });
 
 
 
