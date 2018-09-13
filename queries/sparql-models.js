@@ -173,8 +173,10 @@ module.exports = {
                 ?gpnode rdf:type ?identifier .
                 FILTER(?identifier != owl:NamedIndividual) .         
             }
-            optional {
-        	    ?identifier rdfs:label ?name
+            GRAPH <http://purl.obolibrary.org/obo/go/extensions/go-graphstore.owl> {
+                optional {
+            	    ?identifier rdfs:label ?name
+                }
             }
         }
         GROUP BY ?gocam
@@ -279,9 +281,10 @@ module.exports = {
                 FILTER(!contains(str(?gocam), "_inferred"))
             }
             optional {
-        	    ?identifier rdfs:label ?name
+	            GRAPH <http://purl.obolibrary.org/obo/go/extensions/go-graphstore.owl> {
+            	    ?identifier rdfs:label ?name
+    	        }
             }
-  
             BIND(IF(bound(?name), ?name, ?identifier) as ?name)
         }
         GROUP BY ?gocam

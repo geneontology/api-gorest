@@ -362,13 +362,12 @@ module.exports = {
     
     },
 
-
-    golrClosestCommonClass(expressResponse, subject, object) {
+    golrClosestCommonClass(expressResponse, subject, object, relation) {
         ut = this;
         ut.addCORS(expressResponse);
         
-        let golrSubject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + subject + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
-        let golrObject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + object + "%22&fl=isa_partof_closure,isa_partof_closure_label&wt=json";
+        let golrSubject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + subject + "%22&fl=neighborhood_graph_json&wt=json";
+        let golrObject = "http://golr-aux.geneontology.io/solr/select?fq=document_category:%22ontology_class%22&q=*:*&fq=id:%22" + object + "%22&fl=neighborhood_graph_json&wt=json";
     
         var options = {
             uri: golrSubject,
@@ -383,6 +382,29 @@ module.exports = {
             } else {
 
                 let data = JSON.parse(body).response.docs[0];
+                let graph = JSON.parse(data['neighborhood_graph_json']);
+
+                let isaSet = new Set();
+                let partOfSet = new Set();
+                graph.edges.forEach(edge => {
+                    if(edge.sub == subject) {
+                        if(edge.pred == "is_a") {
+                            isaSet.add(edge.obj);
+                        } else if(edge.pred == "BFO:0000050") {
+                            partOfSet.add(edge.obj);
+                        }
+                    } else if(edge.obj == subject) {
+                        if(edge.pred == "is_a") {
+                            isaSet.add(edge.sub);
+                        } else if(edge.pred == "BFO:0000050") {
+                            partOfSet.add(edge.sub);
+                        }
+                    }
+                });
+
+                // console.log("isaSet: ", isaSet);
+                // console.log("partOfSet: ", partOfSet);
+
 
                 var options2 = {
                     uri: golrObject,
@@ -398,33 +420,48 @@ module.exports = {
                     } else {
         
                         let data2 = JSON.parse(body).response.docs[0];
+                        let graph2 = JSON.parse(data2['neighborhood_graph_json']);
 
-                        let shared = [];
-                        let sharedLabels = [];
-                        let found;
-
-                        let list1 = data["isa_partof_closure"];
-                        let list2 = data2["isa_partof_closure"];
-                        for(let i = 0; i < list1.length; i++) {
-                            // don't include the object term as we are searching for its parents
-                            if(list1[i] == object)
-                                continue;
-
-                            found = false;
-                            for(let j = 0; j < list2.length; j++) {
-                                if(list1[i] == list2[j]) {
-                                    found = true;
+                        let isaSet2 = new Set();
+                        let partOfSet2 = new Set();
+                        graph2.edges.forEach(edge => {
+                            if(edge.sub == object) {
+                                if(edge.pred == "is_a") {
+                                    isaSet2.add(edge.obj);
+                                } else if(edge.pred == "BFO:0000050") {
+                                    partOfSet2.add(edge.obj);
+                                }
+                            } else if(edge.obj == object) {
+                                if(edge.pred == "is_a") {
+                                    isaSet2.add(edge.sub);
+                                } else if(edge.pred == "BFO:0000050") {
+                                    partOfSet2.add(edge.sub);
                                 }
                             }
-                            if(found) {
-                                shared.push(list1[i]);
-                                sharedLabels.push(data["isa_partof_closure_label"][i]);
+                        });            
+                        
+
+//                        isaSet2.add(isaSet.keys().next().value.trim());
+                        let sharedIsA = [];
+                        for (let isa of isaSet) {
+                            if(isaSet2.has(isa)) {
+                                sharedIsA.push(isa);
+//                                console.log("adding ", isa);
                             }
                         }
 
+                        partOfSet2.add(partOfSet.keys().next().value.trim());
+                        let sharedPartOf = [];
+                        for (let partOf of partOfSet) {
+                            if(partOfSet2.has(partOf)) {
+                                sharedPartOf.push(partOf);
+                            }
+                        }
+
+                        
                         let result = {
-                            "shared": shared,
-                            "shared_labels": sharedLabels
+                            "sharedIsA": sharedIsA,
+                            "sharedPartOf": sharedPartOf
                         }
 
                         expressResponse.json(result);

@@ -172,6 +172,8 @@ app.get('/go/:id/hierarchy', function(req, res) {
 app.get('/association/between/:subject/:object', function(req, res) {
   if(req.query.relation == "shared") {
     utils.golrSharedClass(res, req.params.subject, req.params.object);
+  } else if(req.query.relation = "closest") {
+    utils.golrClosestCommonClass(res, req.params.subject, req.params.object);    
   } else {
     utils.golrAssociation(res, req.params.subject, req.params.object, req.query.relation);
   }
