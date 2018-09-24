@@ -173,8 +173,8 @@ module.exports = {
                 ?gpnode rdf:type ?identifier .
                 FILTER(?identifier != owl:NamedIndividual) .         
             }
-            GRAPH <http://purl.obolibrary.org/obo/go/extensions/go-graphstore.owl> {
-                optional {
+            optional {
+                GRAPH <http://purl.obolibrary.org/obo/go/extensions/go-graphstore.owl> {
             	    ?identifier rdfs:label ?name
                 }
             }
