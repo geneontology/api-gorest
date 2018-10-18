@@ -7,7 +7,8 @@ var sparqlModels = require('./queries/sparql-models'),
     sparqlGOs = require('./queries/sparql-go'),
     sparqlPMIDs = require('./queries/sparql-pmids'),
     sparqlGroups = require('./queries/sparql-groups'),
-    sparqlUsers = require('./queries/sparql-users');
+    sparqlUsers = require('./queries/sparql-users'),
+    sparqlSpecies = require('./queries/sparql-species');
 
 var utils = require('./utils');
 
@@ -90,6 +91,10 @@ app.get('/models/:id', function(req, res) {
 
 
 
+
+app.get('/taxon/:taxon/models', function(req, res) {
+  utils.fetchAndSend(res, sparqlSpecies.getSpeciesModels(req.params.taxon), false);
+});
 
 
 // ================================================================================
