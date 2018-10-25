@@ -37,6 +37,16 @@ app.get('/models', function(req, res) {
   // send the <last> models
   } else if(req.query.last) {
     utils.fetchAndSend(res, sparqlModels.ModelList(0, req.query.last), false, keysArrayModels);
+  // send the <group> models
+  } else if(req.query.group) {
+    utils.fetchAndSend(res, sparqlGroups.GroupModelList(req.query.group), false, keysArrayModels);
+  // send the <user> models
+  } else if(req.query.user) {
+    utils.fetchAndSend(res, sparqlUsers.UserModelList(req.query.user), false, keysArrayModels);
+  // send the <pmid> models
+  } else if(req.query.pmid) {
+    utils.fetchAndSend(res, sparqlPMIDs.PMIDModelList(req.query.pmid), false, keysArrayModels);
+  
   // send all models
   } else {
     utils.fetchAndSend(res, sparqlModels.ModelList(), false, keysArrayModels);
