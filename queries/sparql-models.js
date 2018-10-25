@@ -12,8 +12,8 @@ module.exports = {
     	PREFIX obo: <http://www.geneontology.org/formats/oboInOwl#>
         PREFIX providedBy: <http://purl.org/pav/providedBy>
   
-        SELECT  ?gocam ?date ?title (GROUP_CONCAT(?orcid;separator="` + separator + `") AS ?orcids) 
-                                    (GROUP_CONCAT(?name;separator="` + separator + `") AS ?names)
+        SELECT  ?gocam ?date ?title (GROUP_CONCAT(distinct ?orcid;separator="` + separator + `") AS ?orcids) 
+                                    (GROUP_CONCAT(distinct ?name;separator="` + separator + `") AS ?names)
 							        (GROUP_CONCAT(distinct ?providedBy;separator="` + separator + `") AS ?groupids) 
 							        (GROUP_CONCAT(distinct ?providedByLabel;separator="` + separator + `") AS ?groupnames) 
         
