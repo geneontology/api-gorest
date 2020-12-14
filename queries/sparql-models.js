@@ -113,6 +113,7 @@ module.exports = {
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         PREFIX metago: <http://model.geneontology.org/>
 	    PREFIX owl: <http://www.w3.org/2002/07/owl#>
+        
         PREFIX definition: <http://purl.obolibrary.org/obo/IAO_0000115>
         PREFIX BP: <http://purl.obolibrary.org/obo/GO_0008150>
         PREFIX MF: <http://purl.obolibrary.org/obo/GO_0003674>
