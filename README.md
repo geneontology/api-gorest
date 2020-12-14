@@ -5,3 +5,5 @@ The API uses NodeJS/Express and is for data access only at the moment.
 The template.yml file is used to define the CloudFormation through the [Serverless Application Model SAM](https://github.com/awslabs/serverless-application-model).
 
 Currently deployed on: [https://api.geneontology.cloud](https://api.geneontology.cloud)
+
+Currently used to create a cache that powers up [https://geneontology.cloud/browse](https://geneontology.cloud/browse)
