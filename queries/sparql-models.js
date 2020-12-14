@@ -281,9 +281,7 @@ module.exports = {
                 FILTER(!contains(str(?gocam), "_inferred"))
             }
             optional {
-	            GRAPH <http://purl.obolibrary.org/obo/go/extensions/go-graphstore.owl> {
-            	    ?identifier rdfs:label ?name
-    	        }
+                ?identifier rdfs:label ?name
             }
             BIND(IF(bound(?name), ?name, ?identifier) as ?name)
         }
