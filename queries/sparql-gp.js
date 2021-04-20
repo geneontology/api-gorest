@@ -35,10 +35,10 @@ module.exports = {
         PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
         PREFIX rdfs:<http://www.w3.org/2000/01/rdf-schema#> 
         PREFIX metago: <http://model.geneontology.org/>
-        
+        PREFIX dc: <http://purl.org/dc/elements/1.1/>
         PREFIX enabled_by: <http://purl.obolibrary.org/obo/RO_0002333>
         
-        SELECT distinct ?gocam
+        SELECT distinct ?gocam ?title
         
         WHERE 
         {
@@ -47,9 +47,10 @@ module.exports = {
             ?gocam metago:graphType metago:noctuaCam .    
             ?s enabled_by: ?gpnode .    
             ?gpnode rdf:type ?identifier .
-            FILTER(?identifier = <` + id + `>) .         
+            ?gocam dc:title ?title .   
+            FILTER(?identifier = <` + id + `>) .            
           }
-          
+        
         }
         `);
         return "?query=" + encoded;
